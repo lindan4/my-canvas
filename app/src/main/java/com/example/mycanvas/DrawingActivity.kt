@@ -18,7 +18,7 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
     private var mDrawPaint: Paint? = null
     private var mCanvasPaint: Paint? = null
 
-    private var mBrushSize: Float = 0f
+    private var mBrushSize: Float = 0.toFloat()
 
     private var mColour = resources.getColor(R.color.black)
 
@@ -33,14 +33,14 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
         mDrawPath = CustomPath(mColour, mBrushSize)
 
         // How to set this properly?
-        mDrawPaint!!.color = mColour
-        mDrawPaint!!.style = Paint.Style.STROKE
-        mDrawPaint!!.strokeJoin = Paint.Join.ROUND
-        mDrawPaint!!.strokeCap = Paint.Cap.ROUND
+        mDrawPaint?.color = mColour
+        mDrawPaint?.style = Paint.Style.STROKE
+        mDrawPaint?.strokeJoin = Paint.Join.ROUND
+        mDrawPaint?.strokeCap = Paint.Cap.ROUND
 
         mCanvasPaint = Paint(Paint.DITHER_FLAG)
 
-        mBrushSize = 20f
+        mBrushSize = 20.toFloat()
 
     }
 
@@ -54,7 +54,9 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawBitmap(mCanvasBitmap!!, 0f, 0f, mCanvasPaint)
+        mCanvasBitmap.let {
+            canvas.drawBitmap(mCanvasBitmap!!, 0f, 0f, mCanvasPaint)
+        }
 
         if (!mDrawPath!!.isEmpty) {
             mDrawPaint!!.strokeWidth = mDrawPath!!.brushThickness
@@ -63,25 +65,30 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
 
         val touchX = event?.x
         val touchY = event?.y
 
-        when (event?.action) {
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 mDrawPath!!.color = mColour
                 mDrawPath!!.brushThickness = mBrushSize
 
                 mDrawPath!!.reset()
 
-                if (touchX != null && touchY != null) {
-                    mDrawPath!!.moveTo(touchX, touchY)
+                if (touchX != null) {
+                    if (touchY != null) {
+                        mDrawPath!!.moveTo(touchX, touchY)
+
+                    }
                 }
             }
             MotionEvent.ACTION_MOVE -> {
-                if (touchX != null && touchY != null) {
-                    mDrawPath!!.moveTo(touchX, touchY)
+                if (touchX != null) {
+                    if (touchY != null) {
+                        mDrawPath!!.lineTo(touchX, touchY)
+                    }
                 }
             }
             MotionEvent.ACTION_UP -> {
@@ -96,7 +103,5 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
 
 
     }
-    internal inner class CustomPath(var color: Int, var brushThickness: Float): Path() {
-
-    }
+    internal inner class CustomPath(var color: Int, var brushThickness: Float): Path()
 }
