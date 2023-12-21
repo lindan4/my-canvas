@@ -23,6 +23,9 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
     private var mColour = resources.getColor(R.color.black)
 
     private var mCanvas: Canvas? = null
+    private val mPaths: ArrayList<CustomPath> = ArrayList()
+
+
 
     init {
         setupDrawing()
@@ -58,6 +61,12 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
             canvas.drawBitmap(mCanvasBitmap!!, 0f, 0f, mCanvasPaint)
         }
 
+        for (path in mPaths) {
+            mDrawPaint!!.strokeWidth = path.brushThickness
+            mDrawPaint!!.color = path.color
+            canvas.drawPath(path, mDrawPaint!!)
+        }
+
         if (!mDrawPath!!.isEmpty) {
             mDrawPaint!!.strokeWidth = mDrawPath!!.brushThickness
             mDrawPaint!!.color = mDrawPath!!.color
@@ -65,12 +74,12 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         val touchX = event?.x
         val touchY = event?.y
 
-        when (event.action) {
+        when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 mDrawPath!!.color = mColour
                 mDrawPath!!.brushThickness = mBrushSize
@@ -92,6 +101,7 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
                 }
             }
             MotionEvent.ACTION_UP -> {
+                mPaths.add(mDrawPath!!)
                 mDrawPath = CustomPath(mColour, mBrushSize)
             }
             else -> return false
