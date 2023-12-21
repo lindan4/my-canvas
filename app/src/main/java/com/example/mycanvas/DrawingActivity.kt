@@ -6,9 +6,9 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
-import androidx.compose.ui.graphics.Color
 
 class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attrs) {
 
@@ -43,7 +43,7 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
 
         mCanvasPaint = Paint(Paint.DITHER_FLAG)
 
-        mBrushSize = 20.toFloat()
+//        setSizeForBrush(20.toFloat())
 
     }
 
@@ -113,5 +113,13 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
 
 
     }
+
+    fun setSizeForBrush(newSize: Float) {
+        mBrushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, resources.displayMetrics)
+
+        mDrawPaint!!.strokeWidth = mBrushSize
+    }
+
+
     internal inner class CustomPath(var color: Int, var brushThickness: Float): Path()
 }
