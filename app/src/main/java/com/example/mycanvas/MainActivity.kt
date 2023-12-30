@@ -3,12 +3,19 @@ package com.example.mycanvas
 import android.app.Dialog
 import android.media.Image
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 
 class MainActivity : ComponentActivity() {
 
     private var drawingView: DrawingActivity? = null
+
+    private var currentImageColorButton: ImageButton? = null
 
     private var brushSelectionButton: ImageButton? = null
 
@@ -18,6 +25,13 @@ class MainActivity : ComponentActivity() {
 
         drawingView = findViewById(R.id.a_draw_view)
         drawingView?.setSizeForBrush(20.toFloat())
+
+        val colorLinearLayout: LinearLayout = findViewById(R.id.paint_colour_selection)
+
+        currentImageColorButton = colorLinearLayout[0] as ImageButton
+        currentImageColorButton!!.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.pallet_pressed))
+
+        drawingView?.setColor(currentImageColorButton!!.tag.toString());
 
         brushSelectionButton = findViewById(R.id.brush_selection)
 
@@ -51,5 +65,15 @@ class MainActivity : ComponentActivity() {
         }
 
         brushDialog.show()
+    }
+
+    fun paintClicked(view: View) {
+        if (view !== currentImageColorButton) {
+            val viewAsImgButton = view as ImageButton
+            currentImageColorButton?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.pallet_normal))
+            viewAsImgButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.pallet_pressed))
+            drawingView?.setColor(viewAsImgButton.tag.toString());
+            currentImageColorButton = viewAsImgButton
+        }
     }
 }

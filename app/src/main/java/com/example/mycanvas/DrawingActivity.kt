@@ -3,6 +3,7 @@ package com.example.mycanvas
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
@@ -118,6 +119,10 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
         mBrushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, resources.displayMetrics)
 
         mDrawPaint!!.strokeWidth = mBrushSize
+    }
+
+    fun setColor(newColor: String) {
+        mColour = Color.parseColor(newColor)
     }
 
 
