@@ -29,6 +29,39 @@ class MainActivity : ComponentActivity() {
         }
 
 
+    private val cameraAndLocationResultLauncher: ActivityResultLauncher<Array<String>> = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()){
+            permissions ->
+                permissions.entries.forEach{
+                    val permissionName = it.key
+                    val isPermissionGranted = it.value
+
+                    if (isPermissionGranted) {
+                        when (permissionName) {
+                            Manifest.permission.CAMERA -> {
+                                Toast.makeText(this, "Camera permissions granted", Toast.LENGTH_LONG).show()
+
+                            }
+                            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                                Toast.makeText(this, "Location permissions granted", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                    else {
+                        when (permissionName) {
+                            Manifest.permission.CAMERA -> {
+                                Toast.makeText(this, "Camera permissions denied", Toast.LENGTH_LONG).show()
+
+                            }
+                            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                                Toast.makeText(this, "Location permissions denied", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                }
+    }
+
+
     private var drawingView: DrawingActivity? = null
 
     private var currentImageColorButton: ImageButton? = null
@@ -64,7 +97,7 @@ class MainActivity : ComponentActivity() {
                 showRationaleDialog("Camera permission","The camera cannot be used since camera permissions were denied.")
             }
             else {
-                cameraResultLauncher.launch(Manifest.permission.CAMERA)
+                cameraAndLocationResultLauncher.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION))
             }
         }
     }
