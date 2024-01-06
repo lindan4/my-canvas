@@ -1,21 +1,39 @@
 package com.example.mycanvas
 
 import android.app.Dialog
-import android.media.Image
+import android.os.Build
+import android.Manifest
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 
 class MainActivity : ComponentActivity() {
 
+    private val cameraResultLauncher: ActivityResultLauncher<String> = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()){
+            isGranted ->
+            if (isGranted) {
+                Toast.makeText(this, "Camera permissions granted", Toast.LENGTH_LONG).show()
+            }
+            else {
+                Toast.makeText(this, "Camera permissions denied", Toast.LENGTH_LONG).show()
+            }
+        }
+
+
     private var drawingView: DrawingActivity? = null
 
     private var currentImageColorButton: ImageButton? = null
+
+    private var galleryButton: ImageButton? = null
 
     private var brushSelectionButton: ImageButton? = null
 
@@ -38,7 +56,32 @@ class MainActivity : ComponentActivity() {
         brushSelectionButton?.setOnClickListener {
             showBrushSizeDialog()
         }
+
+        galleryButton = findViewById(R.id.gallery_selection)
+
+        galleryButton?.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                showRationaleDialog("Camera permission","The camera cannot be used since camera permissions were denied.")
+            }
+            else {
+                cameraResultLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
     }
+
+    private fun showRationaleDialog(
+        title: String,
+        message: String,
+    ) {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+        builder.create().show()
+    }
+
 
     private fun showBrushSizeDialog() {
         val brushDialog = Dialog(this)
