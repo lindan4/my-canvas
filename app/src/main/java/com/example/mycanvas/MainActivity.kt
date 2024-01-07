@@ -1,7 +1,6 @@
 package com.example.mycanvas
 
 import android.app.Dialog
-import android.os.Build
 import android.Manifest
 import android.app.AlertDialog
 import android.os.Bundle
@@ -17,19 +16,7 @@ import androidx.core.view.get
 
 class MainActivity : ComponentActivity() {
 
-    private val cameraResultLauncher: ActivityResultLauncher<String> = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()){
-            isGranted ->
-            if (isGranted) {
-                Toast.makeText(this, "Camera permissions granted", Toast.LENGTH_LONG).show()
-            }
-            else {
-                Toast.makeText(this, "Camera permissions denied", Toast.LENGTH_LONG).show()
-            }
-        }
-
-
-    private val cameraAndLocationResultLauncher: ActivityResultLauncher<Array<String>> = registerForActivityResult(
+    private val cameraAndStorageResultLauncher: ActivityResultLauncher<Array<String>> = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()){
             permissions ->
                 permissions.entries.forEach{
@@ -38,23 +25,16 @@ class MainActivity : ComponentActivity() {
 
                     if (isPermissionGranted) {
                         when (permissionName) {
-                            Manifest.permission.CAMERA -> {
-                                Toast.makeText(this, "Camera permissions granted", Toast.LENGTH_LONG).show()
+                            Manifest.permission.READ_MEDIA_IMAGES -> {
+                                Toast.makeText(this, "Image storage permissions granted", Toast.LENGTH_LONG).show()
 
-                            }
-                            Manifest.permission.ACCESS_FINE_LOCATION -> {
-                                Toast.makeText(this, "Location permissions granted", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
                     else {
                         when (permissionName) {
-                            Manifest.permission.CAMERA -> {
-                                Toast.makeText(this, "Camera permissions denied", Toast.LENGTH_LONG).show()
-
-                            }
-                            Manifest.permission.ACCESS_FINE_LOCATION -> {
-                                Toast.makeText(this, "Location permissions denied", Toast.LENGTH_LONG).show()
+                            Manifest.permission.READ_MEDIA_IMAGES -> {
+                                Toast.makeText(this, "External storage permissions denied", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
@@ -93,11 +73,11 @@ class MainActivity : ComponentActivity() {
         galleryButton = findViewById(R.id.gallery_selection)
 
         galleryButton?.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                showRationaleDialog("Camera permission","The camera cannot be used since camera permissions were denied.")
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES)) {
+                showRationaleDialog("Storage permission","Storage permissions are needed to read images.")
             }
             else {
-                cameraAndLocationResultLauncher.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION))
+                cameraAndStorageResultLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES))
             }
         }
     }
