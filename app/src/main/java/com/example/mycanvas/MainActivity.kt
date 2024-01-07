@@ -3,9 +3,12 @@ package com.example.mycanvas
 import android.app.Dialog
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,6 +18,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 
 class MainActivity : ComponentActivity() {
+
+    private val openGalleryLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val imgBackground: ImageView = findViewById(R.id.img_view_back)
+
+                imgBackground.setImageURI(result.data?.data)
+
+            }
+
+    }
 
     private val cameraAndStorageResultLauncher: ActivityResultLauncher<Array<String>> = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()){
@@ -27,14 +41,16 @@ class MainActivity : ComponentActivity() {
                         when (permissionName) {
                             Manifest.permission.READ_MEDIA_IMAGES -> {
                                 Toast.makeText(this, "Image storage permissions granted", Toast.LENGTH_LONG).show()
+                                val imageSelectionIntent: Intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
+                                openGalleryLauncher.launch(imageSelectionIntent)
                             }
                         }
                     }
                     else {
                         when (permissionName) {
                             Manifest.permission.READ_MEDIA_IMAGES -> {
-                                Toast.makeText(this, "External storage permissions denied", Toast.LENGTH_LONG).show()
+                                Toast.makeText(this, "Image storage permissions denied", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
