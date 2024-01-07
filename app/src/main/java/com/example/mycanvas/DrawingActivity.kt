@@ -26,8 +26,6 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
     private var mCanvas: Canvas? = null
     private val mPaths: ArrayList<CustomPath> = ArrayList()
 
-
-
     init {
         setupDrawing()
     }
@@ -43,9 +41,6 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
         mDrawPaint?.strokeCap = Paint.Cap.ROUND
 
         mCanvasPaint = Paint(Paint.DITHER_FLAG)
-
-//        setSizeForBrush(20.toFloat())
-
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -106,13 +101,10 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
                 mDrawPath = CustomPath(mColour, mBrushSize)
             }
             else -> return false
-
         }
 
         invalidate()
         return true
-
-
     }
 
     fun setSizeForBrush(newSize: Float) {
@@ -123,6 +115,13 @@ class DrawingActivity(context: Context, attrs: AttributeSet): View(context, attr
 
     fun setColor(newColor: String) {
         mColour = Color.parseColor(newColor)
+    }
+
+    fun removeLastPath() {
+        if (mPaths.size > 0) {
+            mPaths.removeLast()
+            invalidate()
+        }
     }
 
 

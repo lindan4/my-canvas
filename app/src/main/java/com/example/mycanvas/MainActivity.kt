@@ -62,6 +62,8 @@ class MainActivity : ComponentActivity() {
 
     private var currentImageColorButton: ImageButton? = null
 
+    private var undoButton: ImageButton? = null
+
     private var galleryButton: ImageButton? = null
 
     private var brushSelectionButton: ImageButton? = null
@@ -84,6 +86,12 @@ class MainActivity : ComponentActivity() {
 
         brushSelectionButton?.setOnClickListener {
             showBrushSizeDialog()
+        }
+
+        undoButton = findViewById(R.id.undo_selection)
+
+        undoButton?.setOnClickListener {
+            drawingView?.removeLastPath()
         }
 
         galleryButton = findViewById(R.id.gallery_selection)

@@ -144,6 +144,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" >
+
+
+        <ImageButton
+            android:id="@+id/undo_selection"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_undo"
+            android:scaleType="fitXY" />
+
         <ImageButton
             android:id="@+id/gallery_selection"
             android:layout_width="50dp"
