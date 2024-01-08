@@ -68,6 +68,8 @@ class MainActivity : ComponentActivity() {
 
     private var brushSelectionButton: ImageButton? = null
 
+    private var saveButton: ImageButton? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -103,6 +105,12 @@ class MainActivity : ComponentActivity() {
             else {
                 cameraAndStorageResultLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES))
             }
+        }
+
+        saveButton = findViewById(R.id.save_selection)
+
+        saveButton?.setOnClickListener {
+
         }
     }
 
