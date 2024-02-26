@@ -122,6 +122,8 @@ class MainActivity : ComponentActivity() {
 
     private var saveButton: ImageButton? = null
 
+    private var progressDialog: Dialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -190,9 +192,24 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun saveBitmapScope() {
+        showProgressDialog()
         lifecycleScope.launch {
             val flDrawingView: FrameLayout = findViewById(R.id.drawing_view_frame_layout)
             saveBitmapFile(getBitmapFromView(flDrawingView))
+            cancelProgressDialog()
+        }
+    }
+
+    private fun showProgressDialog() {
+        progressDialog = Dialog(this@MainActivity)
+        progressDialog?.setContentView(R.layout.custom_dialog_progress)
+        progressDialog?.show()
+    }
+
+    private fun cancelProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog?.dismiss()
+            progressDialog = null
         }
     }
 

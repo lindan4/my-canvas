@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyCanvas</string>
+    <string name="please_wait_string">Please wait...</string>
 </resources>
